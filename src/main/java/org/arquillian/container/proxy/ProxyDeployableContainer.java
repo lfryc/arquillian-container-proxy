@@ -143,13 +143,11 @@ public class ProxyDeployableContainer implements DeployableContainer<ProxyDeploy
 
     private void resolveClasspathDependencies(Profile profile) {
         String[] dependencies = profile.getDependencies();
-        System.out.println("Resolving dependencies:\n" + join(dependencies));
 
         try {
             MavenDependency[] mavenDependencies = toMavenDependencies(dependencies, profile.getExclusions());
 
             File[] archives = Maven.configureResolver().addDependencies(mavenDependencies).resolve().withTransitivity().asFile();
-            System.out.println("Resolved:\n" + join(archives));
             classloader = new URLClassLoader(toURLs(archives), ProxyDeployableContainer.class.getClassLoader());
 
             final Class<?> delegateClass = classloader.loadClass(profile.getDeloyableContainerClass());
