@@ -5,6 +5,7 @@ import static org.arquillian.container.proxy.Utils.toURLs;
 import static org.arquillian.container.proxy.Utils.join;
 
 import java.io.File;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -80,7 +81,8 @@ public class ProxyDeployableContainer implements DeployableContainer<ProxyDeploy
                 break;
             }
             case Embedded: {
-                resolveDistributablePackage(configuration, profile, type);
+                File serverHome = resolveDistributablePackage(configuration, profile, type);
+                setDefaultConfigurationProperties(profile, serverHome);
                 break;
             }
         }
@@ -155,10 +157,10 @@ public class ProxyDeployableContainer implements DeployableContainer<ProxyDeploy
             lifecycle(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
-                    delegate = (DeployableContainer) delegateClass.newInstance();
+                    delegate = (DeployableContainer)delegateClass.newInstance();
                     injectorInst.get().inject(delegate);
 
-                    ContainerConfiguration delegateConfig = (ContainerConfiguration)delegate.getConfigurationClass().newInstance();
+                    ContainerConfiguration delegateConfig = (ContainerConfiguration) delegate.getConfigurationClass().newInstance();
                     MapObject.populate(delegateConfig, delegateConfiguration);
                     delegateConfig.validate();
                     delegate.setup(delegateConfig);

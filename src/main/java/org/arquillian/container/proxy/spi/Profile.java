@@ -57,6 +57,7 @@ public class Profile {
 
                 "*:jboss-as-arquillian-testenricher-msc",
                 "*:jboss-as-arquillian-protocol-jmx" };
+
         return new Profile(target, getDependencies(target), exclusions);
     }
 
@@ -128,7 +129,7 @@ public class Profile {
         }
         if (target.getServer() == Server.WILDFLY
                 && target.getVersion().startsWith("9.")) {
-            return getDependenciesWildFly9("1.0.0.Alpha2", target.getType());
+            return getDependenciesWildFly9("1.0.0.Alpha6-SNAPSHOT", target.getType());
         }
         if (target.getServer() == Server.JBOSS_AS) {
             return getDependenciesJBossAS(target.getVersion(), target.getType());
@@ -159,7 +160,9 @@ public class Profile {
     }
 
     private static String[] getDependenciesWildFly9(String version, Type type) {
-        return new String[] { "org.wildfly.arquillian:wildfly-arquillian-container-"
-                + type.name().toLowerCase() + ":" + version };
+        return new String[] {
+            "org.wildfly.arquillian:wildfly-arquillian-container-" + type.name().toLowerCase() + ":" + version,
+            "org.wildfly.arquillian:wildfly-arquillian-protocol-jmx:" + version
+        };
     }
 }
