@@ -80,7 +80,8 @@ public class ChameleonDeployableContainer implements DeployableContainer<Chamele
                 break;
             }
             case Embedded: {
-                resolveDistributablePackage(configuration, profile, type);
+                File serverHome = resolveDistributablePackage(configuration, profile, type);
+                setDefaultConfigurationProperties(profile, serverHome);
                 break;
             }
         }
